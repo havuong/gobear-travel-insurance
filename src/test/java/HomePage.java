@@ -23,6 +23,7 @@ public class HomePage {
     String insurer = "Standard Insurance";
     String sortBy = "insurerName-Asc";
     String policyType = "annual";
+    String traveller = "2";
 
     @BeforeClass
     public void beforeClass() {
@@ -132,7 +133,21 @@ public class HomePage {
     }
 
     @Test
-    public void verifyWhosGoingDetailsFunction() {
+    public void verifyWhosGoingDetailsFunction() throws InterruptedException {
+        List<WebElement> options = driver.findElements(By.cssSelector("div[data-gb-name='traveller'] .radio.radio-primary>input"));
+        for (WebElement option : options) {
+            String value = option.getAttribute("value");
+            if (value.equals(traveller)) {
+                WebElement parent = (WebElement) ((JavascriptExecutor) driver).executeScript(
+                        "return arguments[0].parentNode;", option);
+                parent.click();
+            }
+        }
+        Thread.sleep(3000);
+
+        String navData = driver.findElement(By.cssSelector("div[data-gb-name='travel-nav-data'] small")).getText();
+        String navArray[] = navData.split("\\|");
+        Assert.assertTrue(navArray[1].contains(traveller));
     }
 
     @Test
