@@ -1,5 +1,6 @@
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -11,13 +12,14 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class HomePage {
     WebDriver driver;
     WebDriverWait wait;
     String insurer = "Standard Insurance";
+    String sortBy = "insurerName-Asc";
 
     @BeforeClass
     public void beforeClass() {
@@ -88,8 +90,26 @@ public class HomePage {
     }
 
     @Test
-    public void verifySortFunction() {
-
+    public void verifySortFunction() throws InterruptedException {
+        List<WebElement> options = driver.findElements(By.cssSelector("div[data-gb-name='sort-option']>input"));
+        for (WebElement option : options) {
+            String value = option.getAttribute("value");
+            if (value.equals(sortBy)) {
+                WebElement parent = (WebElement) ((JavascriptExecutor) driver).executeScript(
+                        "return arguments[0].parentNode;", option);
+                parent.click();
+            }
+        }
+        Thread.sleep(3000);
+        List attributeList = new ArrayList();
+        List<WebElement> cards = driver.findElements(By.cssSelector(".card-wrapper"));
+        for (WebElement card : cards) {
+            String valueCard = card.getAttribute("data-insuer-name");
+            attributeList.add(valueCard);
+        }
+        ArrayList tempList = new ArrayList(attributeList);
+        Collections.sort(tempList,String.CASE_INSENSITIVE_ORDER);
+        Assert.assertTrue(attributeList.equals(tempList));
     }
 
     @Test
