@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -24,6 +25,7 @@ public class HomePage {
     String sortBy = "insurerName-Asc";
     String policyType = "annual";
     String traveller = "2";
+    String country = "Singapore";
 
     @BeforeClass
     public void beforeClass() {
@@ -151,7 +153,20 @@ public class HomePage {
     }
 
     @Test
-    public void verifyDesnitationDetailsFunction() {
+    public void verifyDesnitationDetailsFunction() throws InterruptedException {
+        driver.findElement(By.cssSelector(".select-component")).click();
+        List<WebElement> options = driver.findElements(By.cssSelector(".dropdown-menu.open span"));
+        for (WebElement option : options) {
+            String value = option.getText();
+            if (value.equals(country)) {
+                WebElement parent = (WebElement) ((JavascriptExecutor) driver).executeScript(
+                        "return arguments[0].parentNode;", option);
+                parent.click();
+            }
+        }
+        Thread.sleep(3000);
+        String selected = driver.findElement(By.cssSelector("div[data-gb-name='destinations']>div>div")).getAttribute("data-gb-destination");
+        Assert.assertEquals(selected, country);
     }
 
     @Test
