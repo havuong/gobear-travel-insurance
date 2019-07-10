@@ -12,7 +12,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class HomePage {
@@ -20,6 +22,7 @@ public class HomePage {
     WebDriverWait wait;
     String insurer = "Standard Insurance";
     String sortBy = "insurerName-Asc";
+    String policyType = "annual";
 
     @BeforeClass
     public void beforeClass() {
@@ -108,12 +111,36 @@ public class HomePage {
             attributeList.add(valueCard);
         }
         ArrayList tempList = new ArrayList(attributeList);
-        Collections.sort(tempList,String.CASE_INSENSITIVE_ORDER);
+        Collections.sort(tempList, String.CASE_INSENSITIVE_ORDER);
         Assert.assertTrue(attributeList.equals(tempList));
     }
 
     @Test
-    public void verifyDetailsFunction() {
+    public void verifyPolicyTypeDetailsFunction() throws InterruptedException {
+        List<WebElement> options = driver.findElements(By.cssSelector("div[data-gb-name='triptype'] .radio.radio-primary"));
+        for (WebElement option : options) {
+            String value = option.getAttribute("data-gb-trip-types");
+            if (value.equals(policyType)) {
+                option.click();
+            }
+        }
+        Thread.sleep(3000);
+
+        String navData = driver.findElement(By.cssSelector("div[data-gb-name='travel-nav-data'] small")).getText();
+        String navArray[] = navData.split("\\|");
+        Assert.assertTrue(navArray[0].startsWith(policyType));
+    }
+
+    @Test
+    public void verifyWhosGoingDetailsFunction() {
+    }
+
+    @Test
+    public void verifyDesnitationDetailsFunction() {
+    }
+
+    @Test
+    public void verifyTravelDateDetailsFunction() {
     }
 
     @AfterClass
