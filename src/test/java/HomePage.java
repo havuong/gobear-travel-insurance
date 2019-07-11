@@ -39,6 +39,17 @@ public class HomePage extends AbstractTest {
     @FindBy(css = ".card-wrapper")
     private List<WebElement> cardList;
 
+    @FindBy(css = "#collapseSeemoreBtn")
+    private WebElement seeMoreBtn;
+    @FindBy(xpath = "(//div[@class='slider-handle min-slider-handle round'])[2]")
+    private WebElement minMedicalSlider;
+    @FindBy(css = "#gb-slider-2 + b")
+    private WebElement minMedicalText;
+    @FindBy(css = "#gb-slider-2 + b + b")
+    private WebElement maxMedicalText;
+    @FindBy(xpath = "//p[text()='Medical expenses while traveling']/following-sibling::p/descendant::span")
+    private List<WebElement> valuePAs;
+
     @BeforeClass
     public void beforeClass() {
         driver = openBrowser();
@@ -82,18 +93,17 @@ public class HomePage extends AbstractTest {
 
     @Test
     public void verifyRangeFilterFunction() throws InterruptedException {
-        driver.findElement(By.cssSelector("#collapseSeemoreBtn")).click();
-        WebElement slider = driver.findElement(By.xpath("(//div[@class='slider-handle min-slider-handle round'])[2]"));
-        int x = slider.getSize().width;
+        clickOn(seeMoreBtn);
+        int x = minMedicalSlider.getSize().width;
         Actions act = new Actions(driver);
-        act.dragAndDropBy(slider, 20, 0).build().perform();
+        act.dragAndDropBy(minMedicalSlider, 20, 0).build().perform();
 
-        String minText = driver.findElement(By.cssSelector("#gb-slider-2 + b")).getAttribute("data-min-value");
-        String maxText = driver.findElement(By.cssSelector("#gb-slider-2 + b + b")).getAttribute("data-max-value");
+        String minText = getAttribute(minMedicalText,"data-min-value");
+        String maxText = getAttribute(maxMedicalText,"data-max-value");
 
         Thread.sleep(2000);
+        waitForLoadingGone(loadingIcon);
 
-        List<WebElement> valuePAs = driver.findElements(By.xpath("//p[text()='Medical expenses while traveling']/following-sibling::p/descendant::span"));
         for (WebElement valuePA : valuePAs) {
             int convertValuePA = Integer.parseInt(valuePA.getText().replaceAll("[₱,]", ""));
             Assert.assertTrue(convertValuePA >= Integer.parseInt(minText) && convertValuePA <= Integer.parseInt(maxText));
