@@ -36,6 +36,8 @@ public class HomePage extends AbstractTest {
     private WebElement resultText;
     @FindBy(css = ".checkbox.checkbox-primary")
     private List<WebElement> InsurersFilterCbs;
+    @FindBy(css = ".card-wrapper")
+    private List<WebElement> cardList;
 
     @BeforeClass
     public void beforeClass() {
@@ -47,7 +49,7 @@ public class HomePage extends AbstractTest {
 
         waitForClickable(submitBtn);
         clickOn(submitBtn);
-        waitForAttributeToBe(loadingIcon, "style", "display: none;");
+        waitForLoadingGone(loadingIcon);
     }
 
     @Test
@@ -62,18 +64,18 @@ public class HomePage extends AbstractTest {
 
     @Test
     public void verifyInsurersFilterFunction() throws InterruptedException {
-//        List<WebElement> options = driver.findElements(By.cssSelector(".checkbox.checkbox-primary"));
         for (WebElement InsurersFilterCb : InsurersFilterCbs) {
-            String value = InsurersFilterCb.getAttribute("data-filter-name");
+            String value = getAttribute(InsurersFilterCb,"data-filter-name");
 
             if (value.equals(insurer)) {
                 InsurersFilterCb.click();
             }
         }
-        Thread.sleep(3000);
-        List<WebElement> cards = driver.findElements(By.cssSelector(".card-wrapper"));
-        for (WebElement card : cards) {
+        Thread.sleep(2000);
+        waitForLoadingGone(loadingIcon);
+        for (WebElement card : cardList) {
             String valueCard = card.getAttribute("data-insuer-name");
+            System.out.println(valueCard);
             Assert.assertTrue(valueCard.equals(insurer));
         }
     }

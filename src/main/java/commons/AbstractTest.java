@@ -33,6 +33,10 @@ public class AbstractTest {
         new WebDriverWait(driver, waitTime).until(elementToBeClickable(element));
     }
 
+    public void waitForLoadingGone(WebElement element) {
+        new WebDriverWait(driver, waitTime).until(attributeToBe(element, "style", "display: none;"));
+    }
+
     public void waitForAttributeToBe(WebElement element, String attribute, String value) {
         new WebDriverWait(driver, waitTime).until(attributeToBe(element, attribute, value));
     }
@@ -45,5 +49,10 @@ public class AbstractTest {
     public String getTexts(WebElement element) {
         waitForVisibilityOf(element);
         return element.getText();
+    }
+
+    public String getAttribute(WebElement element, String attribute){
+        waitForVisibilityOf(element);
+        return element.getAttribute(attribute);
     }
 }
