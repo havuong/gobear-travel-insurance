@@ -1,6 +1,7 @@
 package commons;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -52,7 +53,12 @@ public class AbstractTest {
     }
 
     public String getAttribute(WebElement element, String attribute){
-        waitForVisibilityOf(element);
         return element.getAttribute(attribute);
+    }
+
+    public void clickParentByJS(WebElement element){
+        WebElement parent = (WebElement) ((JavascriptExecutor) driver).executeScript(
+                "return arguments[0].parentNode;", element);
+        parent.click();
     }
 }

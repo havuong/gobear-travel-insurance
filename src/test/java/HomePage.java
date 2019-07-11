@@ -48,7 +48,10 @@ public class HomePage extends AbstractTest {
     @FindBy(css = "#gb-slider-2 + b + b")
     private WebElement maxMedicalText;
     @FindBy(xpath = "//p[text()='Medical expenses while traveling']/following-sibling::p/descendant::span")
-    private List<WebElement> valuePAs;
+    private List<WebElement> valueMedicalCards;
+
+    @FindBy(css = "div[data-gb-name='sort-option']>input")
+    private List<WebElement> sortRadioList;
 
     @BeforeClass
     public void beforeClass() {
@@ -79,14 +82,13 @@ public class HomePage extends AbstractTest {
             String value = getAttribute(InsurersFilterCb,"data-filter-name");
 
             if (value.equals(insurer)) {
-                InsurersFilterCb.click();
+                clickOn(InsurersFilterCb);
             }
         }
         Thread.sleep(2000);
         waitForLoadingGone(loadingIcon);
         for (WebElement card : cardList) {
             String valueCard = card.getAttribute("data-insuer-name");
-            System.out.println(valueCard);
             Assert.assertTrue(valueCard.equals(insurer));
         }
     }
@@ -104,28 +106,25 @@ public class HomePage extends AbstractTest {
         Thread.sleep(2000);
         waitForLoadingGone(loadingIcon);
 
-        for (WebElement valuePA : valuePAs) {
-            int convertValuePA = Integer.parseInt(valuePA.getText().replaceAll("[₱,]", ""));
-            Assert.assertTrue(convertValuePA >= Integer.parseInt(minText) && convertValuePA <= Integer.parseInt(maxText));
+        for (WebElement valueMedicalCard : valueMedicalCards) {
+            int convertedValueMedical = Integer.parseInt(valueMedicalCard.getText().replaceAll("[₱,]", ""));
+            Assert.assertTrue(convertedValueMedical >= Integer.parseInt(minText) && convertedValueMedical <= Integer.parseInt(maxText));
         }
     }
 
     @Test
     public void verifySortFunction() throws InterruptedException {
-        List<WebElement> options = driver.findElements(By.cssSelector("div[data-gb-name='sort-option']>input"));
-        for (WebElement option : options) {
-            String value = option.getAttribute("value");
+        for (WebElement sortRadio : sortRadioList) {
+            String value = getAttribute(sortRadio,"value");
             if (value.equals(sortBy)) {
-                WebElement parent = (WebElement) ((JavascriptExecutor) driver).executeScript(
-                        "return arguments[0].parentNode;", option);
-                parent.click();
+                clickParentByJS(sortRadio);
             }
         }
-        Thread.sleep(3000);
+        Thread.sleep(2000);
+        waitForLoadingGone(loadingIcon);
         List attributeList = new ArrayList();
-        List<WebElement> cards = driver.findElements(By.cssSelector(".card-wrapper"));
-        for (WebElement card : cards) {
-            String valueCard = card.getAttribute("data-insuer-name");
+        for (WebElement card : cardList) {
+            String valueCard =  getAttribute(card,"data-insuer-name");
             attributeList.add(valueCard);
         }
         ArrayList tempList = new ArrayList(attributeList);
