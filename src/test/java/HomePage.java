@@ -1,12 +1,10 @@
-import io.github.bonigarcia.wdm.WebDriverManager;
+import commons.AbstractTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -16,9 +14,8 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-public class HomePage {
+public class HomePage extends AbstractTest {
     WebDriver driver;
     WebDriverWait wait;
     String insurer = "Standard Insurance";
@@ -27,21 +24,16 @@ public class HomePage {
     String traveller = "2";
     String country = "Singapore";
 
+
     @BeforeClass
     public void beforeClass() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-
-        driver.get("https://www.gobear.com/ph?x_session_type=UAT");
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        driver.manage().window().maximize();
+        driver = openBrowers();
         wait = new WebDriverWait(driver, 10);
 
         driver.findElement(By.cssSelector("li[data-gb-name='Insurance']")).click();
         driver.findElement(By.cssSelector("li[data-gb-name='Travel']")).click();
 
         wait.until(ExpectedConditions.elementToBeClickable(By.name("product-form-submit"))).click();
-
         wait.until(ExpectedConditions.attributeToBe(By.cssSelector("div[data-gb-name='loading-status']"), "style", "display: none;"));
     }
 
