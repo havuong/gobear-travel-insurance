@@ -1,6 +1,4 @@
 import commons.AbstractTest;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -17,6 +15,7 @@ import java.util.List;
 
 public class HomePage extends AbstractTest {
     WebDriver driver;
+    String promotion = "Promos Only";
     String insurer = "Standard Insurance";
     String sortBy = "insurerName-Asc";
     String policyType = "annual";
@@ -34,8 +33,10 @@ public class HomePage extends AbstractTest {
     private WebElement loadingIcon;
     @FindBy(css = "div[data-gb-name='travel-nav-data']>h5")
     private WebElement resultText;
+    @FindBy(css = "div.radio.radio-primary[data-gb-name='filter-option']")
+    private List<WebElement> promotionFilterRadioList;
     @FindBy(css = ".checkbox.checkbox-primary")
-    private List<WebElement> InsurersFilterCbs;
+    private List<WebElement> insurersFilterCbList;
     @FindBy(css = ".card-wrapper")
     private List<WebElement> cardList;
 
@@ -88,12 +89,25 @@ public class HomePage extends AbstractTest {
     }
 
     @Test
-    public void verifyPromotionsFilterFunction() {
+    public void verifyPromotionsFilterFunction() throws InterruptedException {
+        for (WebElement promotionFilterRadio : promotionFilterRadioList) {
+            String value = getAttribute(promotionFilterRadio,"data-filter-name");
+
+            if (value.equals(promotion)) {
+                clickOn(promotionFilterRadio);
+                break;
+            }
+        }
+        Thread.sleep(2000);
+        waitForLoadingGone(loadingIcon);
+
+        String arrResultText[] = getText(resultText).split(" ");
+        Assert.assertTrue(0 == Integer.parseInt(arrResultText[0]));
     }
 
     @Test
     public void verifyInsurersFilterFunction() throws InterruptedException {
-        for (WebElement InsurersFilterCb : InsurersFilterCbs) {
+        for (WebElement InsurersFilterCb : insurersFilterCbList) {
             String value = getAttribute(InsurersFilterCb,"data-filter-name");
 
             if (value.equals(insurer)) {
