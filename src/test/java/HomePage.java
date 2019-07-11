@@ -4,8 +4,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -17,31 +17,42 @@ import java.util.List;
 
 public class HomePage extends AbstractTest {
     WebDriver driver;
-    WebDriverWait wait;
     String insurer = "Standard Insurance";
     String sortBy = "insurerName-Asc";
     String policyType = "annual";
     String traveller = "2";
     String country = "Singapore";
 
+    @FindBy(css = "li[data-gb-name='Insurance']")
+    private WebElement insuranceTab;
+    @FindBy(css = "li[data-gb-name='Travel']")
+    private WebElement travelTab;
+    @FindBy(name = "product-form-submit")
+    private WebElement submitBtn;
+
+    @FindBy(css = "div[data-gb-name='loading-status']")
+    private WebElement loadingIcon;
+    @FindBy(css = "div[data-gb-name='travel-nav-data']>h5")
+    private WebElement resultText;
+    @FindBy(css = ".checkbox.checkbox-primary")
+    private List<WebElement> InsurersFilterCbs;
 
     @BeforeClass
     public void beforeClass() {
-        driver = openBrowers();
-        wait = new WebDriverWait(driver, 10);
+        driver = openBrowser();
+        PageFactory.initElements(driver, this);
 
-        driver.findElement(By.cssSelector("li[data-gb-name='Insurance']")).click();
-        driver.findElement(By.cssSelector("li[data-gb-name='Travel']")).click();
+        clickOn(insuranceTab);
+        clickOn(travelTab);
 
-        wait.until(ExpectedConditions.elementToBeClickable(By.name("product-form-submit"))).click();
-        wait.until(ExpectedConditions.attributeToBe(By.cssSelector("div[data-gb-name='loading-status']"), "style", "display: none;"));
+        waitForClickable(submitBtn);
+        clickOn(submitBtn);
+        waitForAttributeToBe(loadingIcon, "style", "display: none;");
     }
 
     @Test
     public void verifyAtLeast3CardsDisplayed() {
-        String resultText = driver.findElement(By.cssSelector("div[data-gb-name='travel-nav-data']>h5")).getText();
-
-        String arrResultText[] = resultText.split(" ");
+        String arrResultText[] = getTexts(resultText).split(" ");
         Assert.assertTrue(2 < Integer.parseInt(arrResultText[0]));
     }
 
@@ -51,12 +62,12 @@ public class HomePage extends AbstractTest {
 
     @Test
     public void verifyInsurersFilterFunction() throws InterruptedException {
-        List<WebElement> options = driver.findElements(By.cssSelector(".checkbox.checkbox-primary"));
-        for (WebElement option : options) {
-            String value = option.getAttribute("data-filter-name");
+//        List<WebElement> options = driver.findElements(By.cssSelector(".checkbox.checkbox-primary"));
+        for (WebElement InsurersFilterCb : InsurersFilterCbs) {
+            String value = InsurersFilterCb.getAttribute("data-filter-name");
 
             if (value.equals(insurer)) {
-                option.click();
+                InsurersFilterCb.click();
             }
         }
         Thread.sleep(3000);
