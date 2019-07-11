@@ -53,6 +53,21 @@ public class HomePage extends AbstractTest {
     @FindBy(css = "div[data-gb-name='sort-option']>input")
     private List<WebElement> sortRadioList;
 
+    @FindBy(css = "div[data-gb-name='triptype'] .radio.radio-primary")
+    private List<WebElement> tripTypeRadioList;
+    @FindBy(css = "div[data-gb-name='travel-nav-data'] small")
+    private WebElement navBar;
+
+    @FindBy(css = "div[data-gb-name='traveller'] .radio.radio-primary>input")
+    private List<WebElement> travellerRadioList;
+
+    @FindBy(css = ".select-component")
+    private WebElement destinationBox;
+    @FindBy(css = ".dropdown-menu.open span")
+    private List<WebElement> destinationList;
+    @FindBy(css = "div[data-gb-name='destinations']>div>div")
+    private WebElement selectedDestination;
+
     @BeforeClass
     public void beforeClass() {
         driver = openBrowser();
@@ -68,7 +83,7 @@ public class HomePage extends AbstractTest {
 
     @Test
     public void verifyAtLeast3CardsDisplayed() {
-        String arrResultText[] = getTexts(resultText).split(" ");
+        String arrResultText[] = getText(resultText).split(" ");
         Assert.assertTrue(2 < Integer.parseInt(arrResultText[0]));
     }
 
@@ -83,6 +98,7 @@ public class HomePage extends AbstractTest {
 
             if (value.equals(insurer)) {
                 clickOn(InsurersFilterCb);
+                break;
             }
         }
         Thread.sleep(2000);
@@ -118,6 +134,7 @@ public class HomePage extends AbstractTest {
             String value = getAttribute(sortRadio,"value");
             if (value.equals(sortBy)) {
                 clickParentByJS(sortRadio);
+                break;
             }
         }
         Thread.sleep(2000);
@@ -134,52 +151,52 @@ public class HomePage extends AbstractTest {
 
     @Test
     public void verifyPolicyTypeDetailsFunction() throws InterruptedException {
-        List<WebElement> options = driver.findElements(By.cssSelector("div[data-gb-name='triptype'] .radio.radio-primary"));
-        for (WebElement option : options) {
-            String value = option.getAttribute("data-gb-trip-types");
+        for (WebElement tripTypeRadio : tripTypeRadioList) {
+            String value = getAttribute(tripTypeRadio,"data-gb-trip-types");
             if (value.equals(policyType)) {
-                option.click();
+                tripTypeRadio.click();
+                break;
             }
         }
-        Thread.sleep(3000);
+        Thread.sleep(2000);
+        waitForLoadingGone(loadingIcon);
 
-        String navData = driver.findElement(By.cssSelector("div[data-gb-name='travel-nav-data'] small")).getText();
-        String navArray[] = navData.split("\\|");
-        Assert.assertTrue(navArray[0].startsWith(policyType));
+        String navBarText = getText(navBar);
+        String navBarArray[] = navBarText.split("\\|");
+        Assert.assertTrue(navBarArray[0].startsWith(policyType));
     }
 
     @Test
     public void verifyWhosGoingDetailsFunction() throws InterruptedException {
-        List<WebElement> options = driver.findElements(By.cssSelector("div[data-gb-name='traveller'] .radio.radio-primary>input"));
-        for (WebElement option : options) {
-            String value = option.getAttribute("value");
+        for (WebElement travellerRadio : travellerRadioList) {
+            String value = getAttribute(travellerRadio,"value");
             if (value.equals(traveller)) {
-                WebElement parent = (WebElement) ((JavascriptExecutor) driver).executeScript(
-                        "return arguments[0].parentNode;", option);
-                parent.click();
+                clickParentByJS(travellerRadio);
+                break;
             }
         }
-        Thread.sleep(3000);
+        Thread.sleep(2000);
+        waitForLoadingGone(loadingIcon);
 
-        String navData = driver.findElement(By.cssSelector("div[data-gb-name='travel-nav-data'] small")).getText();
-        String navArray[] = navData.split("\\|");
-        Assert.assertTrue(navArray[1].contains(traveller));
+        String navBarText = getText(navBar);
+        String navBarArray[] = navBarText.split("\\|");
+        Assert.assertTrue(navBarArray[1].contains(traveller));
     }
 
     @Test
     public void verifyDesnitationDetailsFunction() throws InterruptedException {
-        driver.findElement(By.cssSelector(".select-component")).click();
-        List<WebElement> options = driver.findElements(By.cssSelector(".dropdown-menu.open span"));
-        for (WebElement option : options) {
-            String value = option.getText();
+        clickOn(destinationBox);
+        for (WebElement destination : destinationList) {
+            String value = getText(destination);
             if (value.equals(country)) {
-                WebElement parent = (WebElement) ((JavascriptExecutor) driver).executeScript(
-                        "return arguments[0].parentNode;", option);
-                parent.click();
+                clickParentByJS(destination);
+                break;
             }
         }
-        Thread.sleep(3000);
-        String selected = driver.findElement(By.cssSelector("div[data-gb-name='destinations']>div>div")).getAttribute("data-gb-destination");
+        Thread.sleep(2000);
+        waitForLoadingGone(loadingIcon);
+
+        String selected = getAttribute(selectedDestination,"data-gb-destination");
         Assert.assertEquals(selected, country);
     }
 

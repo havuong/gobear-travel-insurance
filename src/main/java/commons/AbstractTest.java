@@ -47,7 +47,7 @@ public class AbstractTest {
         element.click();
     }
 
-    public String getTexts(WebElement element) {
+    public String getText(WebElement element) {
         waitForVisibilityOf(element);
         return element.getText();
     }
