@@ -1,12 +1,11 @@
 package commons;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
@@ -43,8 +42,14 @@ public class AbstractTest {
     }
 
     public void clickOn(WebElement element) {
-        waitForClickable(element);
-        element.click();
+        try {
+            waitForClickable(element);
+            element.click();
+        } catch (TimeoutException | ElementClickInterceptedException e) {
+            WebElement parent = (WebElement) ((JavascriptExecutor) driver).executeScript(
+                    "return arguments[0].parentNode;", element);
+            parent.click();
+        }
     }
 
     public String getText(WebElement element) {
@@ -52,13 +57,29 @@ public class AbstractTest {
         return element.getText();
     }
 
-    public String getAttribute(WebElement element, String attribute){
+    public String getAttribute(WebElement element, String attribute) {
         return element.getAttribute(attribute);
     }
 
-    public void clickParentByJS(WebElement element){
-        WebElement parent = (WebElement) ((JavascriptExecutor) driver).executeScript(
-                "return arguments[0].parentNode;", element);
-        parent.click();
+    public void loopAndClickByAttribute(List<WebElement> list, String expect, String attribute) {
+        for (WebElement element : list) {
+            String value = getAttribute(element, attribute);
+
+            if (value.equals(expect)) {
+                clickOn(element);
+                break;
+            }
+        }
+    }
+
+    public void loopAndClickByText(List<WebElement> list, String text) {
+        for (WebElement element : list) {
+            String value = getText(element);
+
+            if (value.equals(text)) {
+                clickOn(element);
+                break;
+            }
+        }
     }
 }

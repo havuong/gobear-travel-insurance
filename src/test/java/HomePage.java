@@ -90,14 +90,7 @@ public class HomePage extends AbstractTest {
 
     @Test
     public void verifyPromotionsFilterFunction() throws InterruptedException {
-        for (WebElement promotionFilterRadio : promotionFilterRadioList) {
-            String value = getAttribute(promotionFilterRadio,"data-filter-name");
-
-            if (value.equals(promotion)) {
-                clickOn(promotionFilterRadio);
-                break;
-            }
-        }
+        loopAndClickByAttribute(promotionFilterRadioList,promotion, "data-filter-name");
         Thread.sleep(2000);
         waitForLoadingGone(loadingIcon);
 
@@ -107,14 +100,7 @@ public class HomePage extends AbstractTest {
 
     @Test
     public void verifyInsurersFilterFunction() throws InterruptedException {
-        for (WebElement InsurersFilterCb : insurersFilterCbList) {
-            String value = getAttribute(InsurersFilterCb,"data-filter-name");
-
-            if (value.equals(insurer)) {
-                clickOn(InsurersFilterCb);
-                break;
-            }
-        }
+        loopAndClickByAttribute(insurersFilterCbList,insurer, "data-filter-name");
         Thread.sleep(2000);
         waitForLoadingGone(loadingIcon);
         for (WebElement card : cardList) {
@@ -144,13 +130,7 @@ public class HomePage extends AbstractTest {
 
     @Test
     public void verifySortFunction() throws InterruptedException {
-        for (WebElement sortRadio : sortRadioList) {
-            String value = getAttribute(sortRadio,"value");
-            if (value.equals(sortBy)) {
-                clickParentByJS(sortRadio);
-                break;
-            }
-        }
+        loopAndClickByAttribute(sortRadioList,sortBy, "value");
         Thread.sleep(2000);
         waitForLoadingGone(loadingIcon);
         List attributeList = new ArrayList();
@@ -165,13 +145,7 @@ public class HomePage extends AbstractTest {
 
     @Test
     public void verifyPolicyTypeDetailsFunction() throws InterruptedException {
-        for (WebElement tripTypeRadio : tripTypeRadioList) {
-            String value = getAttribute(tripTypeRadio,"data-gb-trip-types");
-            if (value.equals(policyType)) {
-                tripTypeRadio.click();
-                break;
-            }
-        }
+        loopAndClickByAttribute(tripTypeRadioList,policyType, "data-gb-trip-types");
         Thread.sleep(2000);
         waitForLoadingGone(loadingIcon);
 
@@ -182,13 +156,7 @@ public class HomePage extends AbstractTest {
 
     @Test
     public void verifyWhosGoingDetailsFunction() throws InterruptedException {
-        for (WebElement travellerRadio : travellerRadioList) {
-            String value = getAttribute(travellerRadio,"value");
-            if (value.equals(traveller)) {
-                clickParentByJS(travellerRadio);
-                break;
-            }
-        }
+        loopAndClickByAttribute(travellerRadioList,traveller, "value");
         Thread.sleep(2000);
         waitForLoadingGone(loadingIcon);
 
@@ -200,13 +168,7 @@ public class HomePage extends AbstractTest {
     @Test
     public void verifyDesnitationDetailsFunction() throws InterruptedException {
         clickOn(destinationBox);
-        for (WebElement destination : destinationList) {
-            String value = getText(destination);
-            if (value.equals(country)) {
-                clickParentByJS(destination);
-                break;
-            }
-        }
+        loopAndClickByText(destinationList,country);
         Thread.sleep(2000);
         waitForLoadingGone(loadingIcon);
 
