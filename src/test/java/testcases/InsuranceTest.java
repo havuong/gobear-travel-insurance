@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.InsurancePage;
@@ -92,8 +93,30 @@ public class InsuranceTest extends AbstractTest {
         Assert.assertEquals(insurancePage.getSelectedDestination(), country);
     }
 
-    @Test
-    public void verifyTravelDateDetailsFunction() {
+    @Test(dataProvider = "inputDates")
+    public void verifyTravelDateDetailsFunction(String ipStartDate, String opStartDate,String ipEndDate, String opEndDate) {
+        insurancePage.clickStartDate();
+        insurancePage.getDatePicker().setDate(ipStartDate);
+
+        insurancePage.clickEndDate();
+        insurancePage.getDatePicker().setDate(ipEndDate);
+
+        Assert.assertEquals(insurancePage.getSelectedStartDate(), opStartDate);
+        Assert.assertEquals(insurancePage.getSelectedEndDate(), opEndDate);
+    }
+
+    @DataProvider(name = "inputDates")
+    public static Object[][] getDates() {
+        return new Object[][]
+                {
+
+                        {
+                                "20 July 2019",
+                                "20-07-2019",
+                                "25 July 2019",
+                                "25-07-2019"
+                        }
+                };
     }
 
     @AfterClass

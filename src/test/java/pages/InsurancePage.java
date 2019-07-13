@@ -1,6 +1,7 @@
 package pages;
 
 import commons.AbstractPage;
+import commons.DatePicker;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -60,17 +61,14 @@ public class InsurancePage extends AbstractPage {
     private List<WebElement> dayList;
     @FindBy(css = ".datepicker-days .datepicker-switch")
     private WebElement currentMonthYear;
-    @FindBy(css = ".active.selected.range-start.day")
-    private WebElement activeStartDay;
-    @FindBy(css = ".active.selected.range-end.day")
-    private WebElement activeEndDay;
-    @FindBy(css = ".datepicker-days .today")
-    private WebElement todayPicker;
+    @FindBy(css = ".datepicker-days")
+    private DatePicker datePicker;
 
     public InsurancePage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
         waitForLoadingGone(driver, loadingIcon);
+        this.datePicker = new DatePicker(driver);
     }
 
     public String[] getResultText() {
@@ -162,5 +160,27 @@ public class InsurancePage extends AbstractPage {
     public String getSelectedDestination() {
         String selected = getAttribute(driver, selectedDestination, "data-gb-destination");
         return selected;
+    }
+
+    public void clickStartDate(){
+        startDatePicker.click();
+    }
+
+    public void clickEndDate(){
+        endDatePicker.click();
+    }
+
+    public DatePicker getDatePicker() {
+        return datePicker;
+    }
+
+    public String getSelectedStartDate() {
+        System.out.println("getSelectedDate: " + this.startDatePicker.getAttribute("value"));
+        return this.startDatePicker.getAttribute("value");
+    }
+
+    public String getSelectedEndDate() {
+        System.out.println("getSelectedDate: " + this.endDatePicker.getAttribute("value"));
+        return this.endDatePicker.getAttribute("value");
     }
 }
