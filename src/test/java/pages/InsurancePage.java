@@ -144,7 +144,7 @@ public class InsurancePage extends AbstractPage {
     public List<String> getMedicalCardList() {
         List<String> convertedValueMedicalList = new ArrayList();
         for (WebElement valueMedicalCard : valueMedicalCards) {
-            String convertedValueMedical = valueMedicalCard.getText().replaceAll("[₱,]", "");
+            String convertedValueMedical = valueMedicalCard.getText().substring(1).replaceAll("[,]", "");
             convertedValueMedicalList.add(convertedValueMedical);
         }
         return convertedValueMedicalList;
@@ -162,11 +162,11 @@ public class InsurancePage extends AbstractPage {
         return selected;
     }
 
-    public void clickStartDate(){
+    public void clickStartDate() {
         startDatePicker.click();
     }
 
-    public void clickEndDate(){
+    public void clickEndDate() {
         endDatePicker.click();
     }
 
@@ -175,12 +175,10 @@ public class InsurancePage extends AbstractPage {
     }
 
     public String getSelectedStartDate() {
-        System.out.println("getSelectedDate: " + this.startDatePicker.getAttribute("value"));
         return this.startDatePicker.getAttribute("value");
     }
 
     public String getSelectedEndDate() {
-        System.out.println("getSelectedDate: " + this.endDatePicker.getAttribute("value"));
         return this.endDatePicker.getAttribute("value");
     }
 }

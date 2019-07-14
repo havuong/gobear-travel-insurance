@@ -28,6 +28,7 @@ public class AbstractPage {
     }
 
     public void clickOn(WebDriver driver, WebElement element) {
+        highlightElementByJS(driver,element);
         try {
             element.click();
         } catch (TimeoutException | ElementClickInterceptedException e) {
@@ -65,5 +66,9 @@ public class AbstractPage {
                 break;
             }
         }
+    }
+    public void highlightElementByJS(WebDriver driver, WebElement element) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].style.border='2px groove green'", element);
     }
 }

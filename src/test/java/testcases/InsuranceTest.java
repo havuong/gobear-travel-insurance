@@ -3,8 +3,6 @@ package testcases;
 import commons.AbstractTest;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pages.HomePage;
@@ -26,8 +24,7 @@ public class InsuranceTest extends AbstractTest {
     String traveller = "2";
     String country = "Singapore";
 
-    @BeforeClass
-    public void beforeClass() {
+    public InsuranceTest() {
         driver = openBrowser();
         homePage = new HomePage(driver);
         homePage.clickOnInsuranceTab();
@@ -36,18 +33,18 @@ public class InsuranceTest extends AbstractTest {
         insurancePage = new InsurancePage(driver);
     }
 
-    @Test
+    @Test(groups = {"card_displayed"})
     public void verifyAtLeast3CardsDisplayed() {
         Assert.assertTrue(2 < Integer.parseInt(insurancePage.getResultText()[0]));
     }
 
-    @Test
+    @Test(groups = {"promotions_filter"})
     public void verifyPromotionsFilterFunction() throws InterruptedException {
         insurancePage.selectPromotionFilter(promotion);
         Assert.assertTrue(promotionResult == Integer.parseInt(insurancePage.getResultText()[0]));
     }
 
-    @Test
+    @Test(groups = {"insurers_filter"})
     public void verifyInsurersFilterFunction() throws InterruptedException {
         insurancePage.selectInsuranceFilter(insurer);
         Assert.assertTrue(insurancePage.getAttributeList("data-insuer-name").stream()
@@ -56,7 +53,7 @@ public class InsuranceTest extends AbstractTest {
         );
     }
 
-    @Test
+    @Test(groups = {"range_filter"})
     public void verifyRangeFilterFunction() throws InterruptedException {
         insurancePage.selectMedicalRangeFilter(20);
         Assert.assertTrue(insurancePage.getMedicalCardList().stream()
@@ -66,7 +63,7 @@ public class InsuranceTest extends AbstractTest {
         );
     }
 
-    @Test
+    @Test(groups = {"sort"})
     public void verifySortFunction() throws InterruptedException {
         insurancePage.selectSortFilter(sortBy);
         List cardList = insurancePage.getAttributeList("data-insuer-name");
@@ -75,26 +72,26 @@ public class InsuranceTest extends AbstractTest {
         Assert.assertTrue(cardList.equals(tempList));
     }
 
-    @Test
+    @Test(groups = {"policy_type"})
     public void verifyPolicyTypeDetailsFunction() throws InterruptedException {
         insurancePage.selectPolicyTypeFilter(policyType);
         Assert.assertTrue(insurancePage.getNavBarText()[0].startsWith(policyType));
     }
 
-    @Test
+    @Test(groups = {"whos_going"})
     public void verifyWhosGoingDetailsFunction() throws InterruptedException {
         insurancePage.selectWhosGoingFilter(traveller);
         Assert.assertTrue(insurancePage.getNavBarText()[1].contains(traveller));
     }
 
-    @Test
+    @Test(groups = {"destination"})
     public void verifyDestinationDetailsFunction() throws InterruptedException {
         insurancePage.selectDestinationFilter(country);
         Assert.assertEquals(insurancePage.getSelectedDestination(), country);
     }
 
-    @Test(dataProvider = "inputDates")
-    public void verifyTravelDateDetailsFunction(String ipStartDate, String opStartDate,String ipEndDate, String opEndDate) {
+    @Test(dataProvider = "inputDates", groups = {"travel_date"})
+    public void verifyTravelDateDetailsFunction(String ipStartDate, String opStartDate, String ipEndDate, String opEndDate) {
         insurancePage.clickStartDate();
         insurancePage.getDatePicker().setDate(ipStartDate);
 
@@ -117,12 +114,5 @@ public class InsuranceTest extends AbstractTest {
                                 "25-07-2019"
                         }
                 };
-    }
-
-    @AfterClass
-    public void afterClass() {
-        if (driver != null) {
-            driver.quit();
-        }
     }
 }

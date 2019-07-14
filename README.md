@@ -1,4 +1,4 @@
-# Gobear Insurance Travel
+# Gobear Travel Insurance
 This repository contains [Selenium](http://seleniumhq.org/) tests for the [Gobear - Travel Insurance](https://www.gobear.com/ph?x_session_type=UAT).
 
 ## Pre-requisites
@@ -19,6 +19,41 @@ git clone https://github.com/havuong/
 
 #### Run test
 
-1. Open project with IDE (IntelliJ or Eclipse)
-2. Run x.java
+Verify At Least 3 Cards Displayed
+```markdown
+$ mvn test -Dgroups=card_displayed
+```
+Verify Promotions Filter Function
+```markdown
+$ mvn test -Dgroups=promotions_filter
+```
+Verify Insurers Filter Function
+```markdown
+$ mvn test -Dgroups=insurers_filter
+```
+Verify Range Filter Function
+```markdown
+$ mvn test -Dgroups=range_filter
+```
+Verify Sort Function
+```markdown
+$ mvn test -Dgroups=sort
+```
+Verify Policy Type Details Function
+```markdown
+$ mvn test -Dgroups=policy_type
+```
+Verify Whos Going Details Function
+```markdown
+$ mvn test -Dgroups=whos_going
+```
+Verify Destination Details Function
+```markdown
+$ mvn test -Dgroups=destination
+```
+Verify Travel Date Details Function
+```markdown
+$ mvn test -Dgroups=travel_date
+```
+
 
