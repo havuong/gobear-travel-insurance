@@ -17,7 +17,7 @@ Clone the repository using the following command:
 git clone https://github.com/havuong/
 ```
 
-#### Run test
+## Run test with CLI
 
 Verify At Least 3 Cards Displayed
 ```markdown
