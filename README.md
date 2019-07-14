@@ -5,9 +5,9 @@ This repository contains [Selenium](http://seleniumhq.org/) tests for the [Gobea
 
 This project requires that you use :
 * **JDK 8**.
-* **Maven**.
-* **Selenium 3.x.x** (or) higher.
-* **Chrome - lasted version** (Version 74).
+* **Maven 3.5.0**.
+* **Selenium 3.14.x** (or) higher.
+* **Chrome - lasted version** (Version 75).
 
 ### Clone or Download project
 
