@@ -14,7 +14,7 @@ This project requires that you use :
 Clone the repository using the following command:
 
 ```bash
-git clone https://github.com/havuong/
+git clone https://github.com/havuong/gobear-travel-insurance.git
 ```
 
 ## Run test with CLI
